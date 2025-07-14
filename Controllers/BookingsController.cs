@@ -59,6 +59,13 @@ namespace InternalBookingSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ResourceId,StartTime,EndTime,BookedBy,Purpose")] Booking booking)
         {
+            //End Time must be after Start Time
+            if (booking.EndTime <= booking.StartTime)
+            {
+                ModelState.AddModelError("EndTime", "End Time must be after Start Time.");
+            }
+
+
             if (ModelState.IsValid)
             {
                 // Check for overlapping bookings
@@ -70,14 +77,6 @@ namespace InternalBookingSystem.Controllers
                 if (overlappingBookings.Any())
                 {
                     ModelState.AddModelError("", "This resource is already booked during the requested time. Please choose another slot or resource, or adjust your times.");
-                    ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
-                    return View(booking);
-                }
-
-                //End Time must be after Start Time
-                if(booking.EndTime <= booking.StartTime)
-                {
-                    ModelState.AddModelError("EndTime", "End Time must be after Start Time.");
                     ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
                     return View(booking);
                 }

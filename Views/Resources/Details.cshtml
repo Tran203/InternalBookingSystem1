@@ -42,6 +42,43 @@
         </dd>
     </dl>
 </div>
+
+<h3>Upcoming Bookings</h3>
+@if (Model.Bookings != null && Model.Bookings.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Booked By</th>
+                <th>Purpose</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model.Bookings.OrderBy(b => b.StartTime))
+            {
+                <tr>
+                    <td>@booking.StartTime.ToLocalTime().ToString("g")</td>
+                    <td>@booking.EndTime.ToLocalTime().ToString("g")</td>
+                    <td>@booking.BookedBy</td>
+                    <td>@booking.Purpose</td>
+                    <td>
+                        <a asp-action="Details" asp-controller="Bookings" asp-route-id="@booking.Id">Details</a> |
+                        <a asp-action="Edit" asp-controller="Bookings" asp-route-id="@booking.Id">Edit</a> |
+                        <a asp-action="Delete" asp-controller="Bookings" asp-route-id="@booking.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No upcoming bookings for this resource.</p>
+}
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

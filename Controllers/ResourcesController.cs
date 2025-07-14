@@ -34,6 +34,7 @@ namespace InternalBookingSystem.Controllers
             }
 
             var resource = await _context.Resources
+                .Include(r => r.Bookings.Where(b => b.EndTime >= DateTime.Now))
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (resource == null)
             {
