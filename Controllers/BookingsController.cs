@@ -61,7 +61,20 @@ namespace InternalBookingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(booking);
+                // Check for overlapping bookings
+                var overlappingBookings = await _context.Bookings
+                    .Where(b => b.ResourceId == booking.ResourceId &&
+                                ((b.StartTime < booking.EndTime && b.EndTime > booking.StartTime)))
+                    .ToListAsync();
+
+                if (overlappingBookings.Any())
+                {
+                    ModelState.AddModelError("", "This resource is already booked during the requested time. Please choose another slot or resource, or adjust your times.");
+                    ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
+                    return View(booking);
+                }
+
+                    _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
