@@ -23,6 +23,6 @@ namespace InternalBookingSystem.Models
         [DisplayName("Available")]
         public bool IsAvailable { get; set; }
 
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
     }
 }
