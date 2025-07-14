@@ -142,8 +142,18 @@ namespace InternalBookingSystem.Controllers
             var resource = await _context.Resources.FindAsync(id);
             if (resource != null)
             {
+                // If the resource has active bookings, we should not delete it.
+                if (_context.Bookings.Any(b => b.ResourceId == id  && b.EndTime >= DateTime.Now))
+                {
+                    ModelState.AddModelError("", "Cannot delete resource with Active or Upcoming bookings.");
+                    return View(resource);
+                }
+
+
                 _context.Resources.Remove(resource);
             }
+
+            
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

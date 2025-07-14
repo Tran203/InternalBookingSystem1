@@ -48,7 +48,7 @@ namespace InternalBookingSystem.Controllers
         // GET: Bookings/Create
         public IActionResult Create()
         {
-            ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name");
+            ViewData["ResourceId"] = new SelectList(_context.Resources.Where(r => r.IsAvailable), "Id", "Name");//cannot book a unavailable resource
             return View();
         }
 
@@ -74,7 +74,15 @@ namespace InternalBookingSystem.Controllers
                     return View(booking);
                 }
 
-                    _context.Add(booking);
+                //End Time must be after Start Time
+                if(booking.EndTime <= booking.StartTime)
+                {
+                    ModelState.AddModelError("EndTime", "End Time must be after Start Time.");
+                    ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
+                    return View(booking);
+                }
+
+                _context.Add(booking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
