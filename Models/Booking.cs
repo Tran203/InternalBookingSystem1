@@ -22,6 +22,7 @@ namespace InternalBookingSystem.Models
 
         [DisplayName("Booked By")]
         [StringLength(100, ErrorMessage = "Booked by cannot exceed 100 characters")]
+        [Required(ErrorMessage = "Booked By is required")]
         public string BookedBy { get; set; }
 
         [Required(ErrorMessage = "Purpose is required")]

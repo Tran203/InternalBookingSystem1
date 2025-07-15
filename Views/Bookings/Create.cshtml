@@ -28,12 +28,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="BookedBy" class="control-label"></label>
-                <input asp-for="BookedBy" class="form-control" />
+                <input asp-for="BookedBy" class="form-control" required placeholder="Enter your name" />
                 <span asp-validation-for="BookedBy" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Purpose" class="control-label"></label>
-                <input asp-for="Purpose" class="form-control" />
+                <input asp-for="Purpose" class="form-control" required placeholder="Enter booking purpose" />
                 <span asp-validation-for="Purpose" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,4 +49,69 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const startTimeInput = document.querySelector('input[name="StartTime"]');
+            const endTimeInput = document.querySelector('input[name="EndTime"]');
+            
+            //GET LOCAL TIME 
+            function getLocalDateTimeString() {
+                const now = new Date();
+                now.setSeconds(0, 0); // Remove seconds/milliseconds
+                const year = now.getFullYear();
+                const month = ("0" + (now.getMonth() + 1)).slice(-2);
+                const day = ("0" + now.getDate()).slice(-2);
+                const hours = ("0" + now.getHours()).slice(-2);
+                const minutes = ("0" + now.getMinutes()).slice(-2);
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            const nowLocal = getLocalDateTimeString();
+            startTimeInput.min = nowLocal;
+            endTimeInput.min = nowLocal;
+
+
+            //Time Validations
+            function validateTimes(showMessages) {
+                const start = new Date(startTimeInput.value);
+                const end = new Date(endTimeInput.value);
+                let valid = true;
+
+                // clear previous field values 
+                startTimeInput.setCustomValidity("");
+                endTimeInput.setCustomValidity("");
+
+                if (startTimeInput.value && start < new Date()) {
+                    startTimeInput.setCustomValidity("Start Time cannot be in the past.");
+                    valid = false;
+                }
+
+                if (endTimeInput.value && end < new Date()) {
+                    endTimeInput.setCustomValidity("End Time cannot be in the past.");
+                    valid = false;
+                }
+
+                
+
+                if (showMessages && !valid) {
+                    startTimeInput.reportValidity();
+                    endTimeInput.reportValidity();
+                }
+
+                return valid;
+            }
+
+            startTimeInput.addEventListener("input", () => validateTimes(false));
+            endTimeInput.addEventListener("input", () => validateTimes(false));
+
+            form.addEventListener("submit", function (event) {
+                if (!validateTimes(true)) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+
 }

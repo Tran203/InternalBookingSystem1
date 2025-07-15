@@ -102,7 +102,7 @@ namespace InternalBookingSystem.Controllers
             {
                 return NotFound();
             }
-            ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
+            ViewData["ResourceId"] = new SelectList(_context.Resources.Where(r => r.IsAvailable), "Id", "Name", booking.ResourceId);//cannot book a unavailable resource
             return View(booking);
         }
 
@@ -126,10 +126,10 @@ namespace InternalBookingSystem.Controllers
             if (ModelState.IsValid)
             {
                 var overlappingBookings = await _context.Bookings
-            .Where(b => b.ResourceId == booking.ResourceId &&
-                        b.Id != booking.Id && // Exclude the current booking
-                        ((b.StartTime < booking.EndTime && b.EndTime > booking.StartTime)))
-            .ToListAsync();
+                        .Where(b => b.ResourceId == booking.ResourceId &&
+                                    b.Id != booking.Id && // Exclude the current booking
+                                    ((b.StartTime < booking.EndTime && b.EndTime > booking.StartTime)))
+                        .ToListAsync();
 
                 if (overlappingBookings.Any())
                 {
