@@ -19,11 +19,18 @@ namespace InternalBookingSystem.Controllers
             _context = context;
         }
 
-        // GET: Bookings
+        // GET: Active Bookings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bookings.Include(b => b.Resource);
+            var applicationDbContext = _context.Bookings.Include(b => b.Resource).Where(b => b.EndTime >= DateTime.Now);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        //GET: Past Bookings
+        public async Task<IActionResult> PastBookings()
+        {
+            var pastBookings = _context.Bookings.Include(b => b.Resource).Where(b => b.EndTime < DateTime.Now);
+            return View(await pastBookings.ToListAsync());
         }
 
         // GET: Bookings/Details/5
@@ -76,13 +83,16 @@ namespace InternalBookingSystem.Controllers
 
                 if (overlappingBookings.Any())
                 {
-                    ModelState.AddModelError("", "This resource is already booked during the requested time. Please choose another slot or resource, or adjust your times.");
+                    TempData["ErrorMessage"] = "This resource is already booked during the requested time. Please choose another slot or resource, or adjust your times.";
                     ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
                     return View(booking);
                 }
 
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Booking Created Successfully";
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
@@ -133,7 +143,7 @@ namespace InternalBookingSystem.Controllers
 
                 if (overlappingBookings.Any())
                 {
-                    ModelState.AddModelError("", "This resource is already booked during the requested time. Please choose another slot or resource, or adjust your times.");
+                    TempData["ErrorMessage"] = "This resource is already booked during the requested time. Please choose another slot or resource, or adjust your times.";
                     ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
                     return View(booking);
                 }
@@ -154,6 +164,7 @@ namespace InternalBookingSystem.Controllers
                         throw;
                     }
                 }
+                TempData["SuccessMessage"] = "Booking Edited Successfully";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
@@ -191,6 +202,7 @@ namespace InternalBookingSystem.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Booking Deleted Successfully";
             return RedirectToAction(nameof(Index));
         }
 

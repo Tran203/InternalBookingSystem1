@@ -61,8 +61,11 @@ namespace InternalBookingSystem.Controllers
             {
                 _context.Add(resource);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Resource Created Successfully!";
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["ErrorMessage"] = "Failed to create resource. Please check the details and try again.";
             return View(resource);
         }
 
@@ -100,6 +103,7 @@ namespace InternalBookingSystem.Controllers
                 {
                     _context.Update(resource);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Resource Updated Successfully!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -114,6 +118,7 @@ namespace InternalBookingSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            TempData["ErrorMessage"] = "Failed to update resource. Please check the details and try again.";
             return View(resource);
         }
 
@@ -146,12 +151,13 @@ namespace InternalBookingSystem.Controllers
                 // If the resource has active bookings, we should not delete it.
                 if (_context.Bookings.Any(b => b.ResourceId == id  && b.EndTime >= DateTime.Now))
                 {
-                    ModelState.AddModelError("", "Cannot delete resource with Active or Upcoming bookings.");
+                   // ModelState.AddModelError("", "Cannot delete resource with Active or Upcoming bookings.");
+                    TempData["ErrorMessage"] = "Cannot delete resource with Active or Upcoming bookings.";
                     return View(resource);
                 }
 
-
                 _context.Resources.Remove(resource);
+                TempData["SuccessMessage"] = "Resource Deleted Successfully!";
             }
 
             
