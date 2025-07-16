@@ -10,7 +10,8 @@ namespace InternalBookingSystem.Models
         public int Id { get; set; }
 
         [ForeignKey("Resource")]
-        public int ResourceId { get; set; }
+        [DisplayName("Resource")]
+        public int? ResourceId { get; set; }
 
         [DisplayName("Start Time")]
         [Required(ErrorMessage = "StartTime is required")]

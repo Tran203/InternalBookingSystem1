@@ -10,7 +10,7 @@
     </div>
 
     <!-- Search Input and Create Button -->
-    <div class="d-flex justify-content-between align-items-center mb-3 search-create-container">
+    <div class="d-flex justify-content-between align-items-center mb-3 ">
         <input type="text" id="searchInput" class="form-control me-2" placeholder="Search by name, description, or location..." />
         <a asp-action="Create" class="btn btn-success">Add Resource</a>
     </div>
@@ -42,7 +42,6 @@
                             name: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(item.Name)),
                             description: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(item.Description)),
                             location: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(item.Location)),
-                            capacity: @item.Capacity,
                             isAvailable: @(item.IsAvailable ? "true" : "false")
                         },
             </text>
@@ -54,7 +53,7 @@
         let currentPage = 1;
         let filteredResources = [...resources];
 
-        // Function to render cards
+        // Function to show cards
         function renderCards(page) {
             const start = (page - 1) * itemsPerPage;
             const end = start + itemsPerPage;
@@ -69,14 +68,13 @@
                             <div class="card-body">
                                 <p class="card-text"><strong>Description:</strong> ${resource.description || 'N/A'}</p>
                                 <p class="card-text"><strong>Location:</strong> ${resource.location || 'N/A'}</p>
-                                <p class="card-text"><strong>Capacity:</strong> ${resource.capacity} people</p>
                                 <span class="badge ${resource.isAvailable ? 'status-available' : 'status-unavailable'} availability-badge">
                                     ${resource.isAvailable ? 'Available' : 'Unavailable'}
                                 </span>
                                 <div class="action-buttons mt-3">
-                                    <a href="/Resources/Details/${resource.id}" class="btn-action btn-primary-custom">Details</a>
-                                    <a href="/Resources/Edit/${resource.id}" class="btn-action btn-secondary-custom">Edit</a>
-                                    <a href="/Resources/Delete/${resource.id}" class="btn-action btn-danger-custom">Delete</a>
+                                                    <a href="/Resources/Details/${resource.id}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>Details
+                            </a>
                                 </div>
                             </div>
                         </div>

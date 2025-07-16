@@ -30,7 +30,16 @@
                     <td>
                         <span class="badge" style="background: var(--info-color); color: white; padding: 0.3rem 0.6rem; font-size: 0.7rem;">@item.Purpose</span>
                     </td>
-                    <td>@item.Resource.Name</td>
+                    <td>
+                        @if (item.Resource != null)
+                        {
+                            @item.Resource.Name
+                        }
+                        else
+                        {
+                            <b><i><i class="bi bi-exclamation-circle-fill"></i>Resource deleted</i> </b>
+                        }
+                    </td>
                    
                 </tr>
             }

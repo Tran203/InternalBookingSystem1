@@ -23,7 +23,7 @@
                 </div>
                 <div class="info-item" style="margin-bottom: 0.75rem; padding: 0.5rem; background: var(--light-bg); border-radius: 6px; border-left: 3px solid var(--primary-color);">
                     <div class="info-label" style="font-weight: 600; color: #495057; margin-bottom: 0.25rem; font-size: 0.85rem;">Capacity:</div>
-                    <div class="info-value" style="color: #212529; font-weight: 500; font-size: 0.85rem;">@Model.Capacity people</div>
+                    <div class="info-value" style="color: #212529; font-weight: 500; font-size: 0.85rem;">@Model.Capacity</div>
                 </div>
                 <div class="info-item" style="margin-bottom: 0.75rem; padding: 0.5rem; background: var(--light-bg); border-radius: 6px; border-left: 3px solid var(--primary-color);">
                     <div class="info-label" style="font-weight: 600; color: #495057; margin-bottom: 0.25rem; font-size: 0.85rem;">Status:</div>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="main-actions" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
                     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary" style="padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; text-decoration: none; font-size: 0.8rem; background: var(--primary-color); color: white;">Edit Resource</a>
-                    <a asp-action="Create" asp-controller="Bookings" asp-route-resourceId="@Model?.Id" class="btn btn-success" style="padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; text-decoration: none; font-size: 0.8rem; background: var(--success-color); color: white;">New Booking</a>
+                    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger" style="padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; text-decoration: none; font-size: 0.8rem;">Delete Resource</a>
                     <a asp-action="Index" class="btn btn-secondary" style="padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; text-decoration: none; font-size: 0.8rem; background: #6c757d; color: white;">Back to Resources</a>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                                         <div class="action-buttons" style="display: flex; flex-direction: column; gap: 0.5rem;">
                                             <a asp-action="Details" asp-controller="Bookings" asp-route-id="@booking.Id" class="btn-action btn-primary-custom" style="padding: 0.3rem 0.6rem; border-radius: 4px; text-decoration: none; font-size: 0.75rem; background: var(--primary-color); color: white;">Details</a>
                                             <a asp-action="Edit" asp-controller="Bookings" asp-route-id="@booking.Id" class="btn-action btn-secondary-custom" style="padding: 0.3rem 0.6rem; border-radius: 4px; text-decoration: none; font-size: 0.75rem; background: #6c757d; color: white;">Edit</a>
-                                            <a asp-action="Delete" asp-controller="Bookings" asp-route-id="@booking.Id" class="btn-action btn-danger-custom" style="padding: 0.3rem 0.6rem; border-radius: 4px; text-decoration: none; font-size: 0.75rem; background: #dc3545; color: white;">Delete</a>
+                                            <a asp-action="Delete" asp-controller="Bookings" asp-route-id="@booking.Id" class="btn-action btn-danger-custom" style="padding: 0.3rem 0.6rem; border-radius: 4px; text-decoration: none; font-size: 0.75rem; background: #dc3545; color: white;">Cancel</a>
                                         </div>
                                     </td>
                                 </tr>
