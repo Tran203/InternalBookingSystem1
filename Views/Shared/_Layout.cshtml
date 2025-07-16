@@ -93,6 +93,11 @@
                 }, 3000);
             });
         });
+
+                   $('#backBtn').on('click', function () {
+                    window.history.back();
+                });
+
     </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -50,7 +50,10 @@
     <!-- Action Buttons -->
     <div class="d-flex justify-content-start align-items-center gap-2">
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">Delete</button>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <button type="button" class="btn btn-secondary" id="backBtn" style="width:auto;height:44px;border-radius: 50px;padding: 10px 24px">
+            <i class="bi bi-arrow-left" style="margin-right: 8px;"></i>
+            Back
+        </button>
     </div>
 
     <!-- Delete Confirmation Modal -->
