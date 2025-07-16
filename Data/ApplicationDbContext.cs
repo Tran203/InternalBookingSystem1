@@ -42,7 +42,7 @@ namespace InternalBookingSystem.Data
                 new Resource { Id = 10, Name = "MacBook Pro", Description = "MacBook for design team", Location = "Data Team", Capacity = 1, IsAvailable = false },
                 new Resource { Id = 11, Name = "Desktop PC 1", Description = "Workstation", Location = "Asset Management Office", Capacity = 1, IsAvailable = true },
 
-                // AV / Presentation
+                // Presentation
                 new Resource { Id = 12, Name = "Projector X", Description = "Projector for presentations", Location = "Asset Management Office", Capacity = 1, IsAvailable = true },
                 new Resource { Id = 13, Name = "Portable Speaker", Description = "Speaker set for events", Location = "Store Room", Capacity = 1, IsAvailable = false },
                 new Resource { Id = 14, Name = "Wireless Microphones", Description = "Set of 4 wireless mics", Location = "Store Room", Capacity = 4, IsAvailable = true },

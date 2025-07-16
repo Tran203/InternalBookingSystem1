@@ -59,10 +59,18 @@ namespace InternalBookingSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(resource);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Resource Created Successfully!";
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(resource);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Resource Created Successfully!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred while creating the resource: {ex.Message}";
+                    return View(resource);
+                }
             }
 
             TempData["ErrorMessage"] = "Failed to create resource. Please check the details and try again.";
@@ -151,18 +159,24 @@ namespace InternalBookingSystem.Controllers
                 // If the resource has active bookings, we should not delete it.
                 if (_context.Bookings.Any(b => b.ResourceId == id  && b.EndTime >= DateTime.Now))
                 {
-                   // ModelState.AddModelError("", "Cannot delete resource with Active or Upcoming bookings.");
                     TempData["ErrorMessage"] = "Cannot delete resource with Active or Upcoming bookings.";
                     return View(resource);
                 }
 
-                _context.Resources.Remove(resource);
-                TempData["SuccessMessage"] = "Resource Deleted Successfully!";
+                try
+                {
+                    _context.Resources.Remove(resource);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Resource Deleted Successfully!";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred while deleting the resource: {ex.Message}";
+                    return View(resource);
+                }
             }
 
-            
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

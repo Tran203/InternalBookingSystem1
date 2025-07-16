@@ -75,7 +75,7 @@ namespace InternalBookingSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                // Check for overlapping bookings
+                // Check for overlapping bookings to prevent time conflicts
                 var overlappingBookings = await _context.Bookings
                     .Where(b => b.ResourceId == booking.ResourceId &&
                                 ((b.StartTime < booking.EndTime && b.EndTime > booking.StartTime)))
@@ -88,12 +88,19 @@ namespace InternalBookingSystem.Controllers
                     return View(booking);
                 }
 
-                _context.Add(booking);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Booking Created Successfully";
-
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(booking);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Booking Created Successfully";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred while deleting the resource: {ex.Message}";
+                    ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
+                    return View(booking);
+                }
             }
             ViewData["ResourceId"] = new SelectList(_context.Resources, "Id", "Name", booking.ResourceId);
             return View(booking);
@@ -135,6 +142,7 @@ namespace InternalBookingSystem.Controllers
 
             if (ModelState.IsValid)
             {
+                // Check for overlapping bookings to prevent time conflicts
                 var overlappingBookings = await _context.Bookings
                         .Where(b => b.ResourceId == booking.ResourceId &&
                                     b.Id != booking.Id && // Exclude the current booking
@@ -198,11 +206,18 @@ namespace InternalBookingSystem.Controllers
             var booking = await _context.Bookings.FindAsync(id);
             if (booking != null)
             {
-                _context.Bookings.Remove(booking);
+                try
+                {
+                    _context.Bookings.Remove(booking);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Booking Deleted Successfully";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"An error occurred while deleting the booking: {ex.Message}";
+                    return View(booking);
+                }
             }
-
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Booking Deleted Successfully";
             return RedirectToAction(nameof(Index));
         }
 
